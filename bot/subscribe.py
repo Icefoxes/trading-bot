@@ -1,0 +1,126 @@
+import websockets
+from okx.websocket import WsUtils
+from typing import List
+import json
+import logging
+import asyncio
+from bot import TradeBotConf, Strategy, to_tick, to_order, to_bar, to_position
+
+
+
+class Subscription:
+    def __init__(self, channel: str, arg: dict) -> None:
+        self.channel = channel
+        self.arg = {
+            'channel': channel,
+            **arg
+        }
+
+    def __repr__(self) -> str:
+        return self.arg
+
+
+class ConnectionManager:
+    def __init__(self,
+                 uri: str,
+                 subscriptions: List[Subscription],
+                 conf: TradeBotConf = None,
+                 private: bool = False) -> None:
+        self.uri = uri
+        self.subscriptions = subscriptions
+        self.private = private
+        if private and conf:
+            self.conf = {
+                'apiKey': conf.apiKey,
+                'passphrase': conf.passphrase,
+                'secretKey': conf.secretKey,
+                'useServerTime': False
+            }
+
+    async def run(self):
+        async with websockets.connect(self.uri) as conn:
+            # login
+            if self.private and self.conf:
+                payload = WsUtils.initLoginParams(**self.conf)
+                await conn.send(payload.decode())
+                await asyncio.sleep(3)
+            # subscribe
+            for sub in self.subscriptions:
+                await conn.send(json.dumps({
+                    'op': 'subscribe',
+                    'args': [sub.arg]
+                }))
+            async for message in conn:
+                await self.handle_message(json.loads(message))
+
+    async def handle_message(self, message: dict):
+        pass
+
+
+class OrderSubscriber(ConnectionManager):
+    def __init__(self, strategy: Strategy) -> None:
+        self.channel = 'orders'
+        self.strategy = strategy
+        conf = TradeBotConf.load()
+        logging.info('init OrderSubscriber')
+        super().__init__(conf.ws_private, [Subscription('orders', {'instType': self.strategy.instrumentType})], conf, True)
+
+
+    async def handle_message(self, message: dict):
+        if message.get('arg', {}).get('channel') == self.channel and message.get('data'):
+            orders = to_order(message['data'])
+            self.strategy.on_order_status(orders)
+        logging.info(f'order {json.dumps(message)}')
+
+
+class PositionSubscriber(ConnectionManager):
+    def __init__(self, strategy: Strategy) -> None:
+        self.channel = 'positions'
+        self.strategy = strategy
+        conf = TradeBotConf.load()
+        logging.info('init PositionSubscriber')
+        super().__init__(conf.ws_private, [Subscription(self.channel, {'instType': self.strategy.instrumentType})], conf, True)
+
+
+    async def handle_message(self, message: dict):
+        if message.get('arg', {}).get('channel') == self.channel and message.get('data'):
+            positions = to_position(message['data'])
+            self.strategy.on_position_status(positions)
+        logging.info(f'position {json.dumps(message)}')
+                
+
+
+class TickSubscriber(ConnectionManager):
+    def __init__(self, strategy: Strategy) -> None:
+        self.channel = 'tickers'
+        self.strategy = strategy
+        conf = TradeBotConf.load()
+        logging.info('init TickSubscriber')
+        super().__init__(conf.ws_public, [Subscription(self.channel, {'instId': sub}) for sub in self.strategy.instruments])
+
+    async def handle_message(self, message: dict):
+        if message.get('arg', {}).get('channel') == self.channel and message.get('data') and len(message.get('data')) > 0:
+            ticks = to_tick(message['data'][0])
+            self.strategy.on_tick(ticks)
+        logging.debug(f'tick {json.dumps(message)}')
+
+
+class BarSubscriber(ConnectionManager):
+    def __init__(self, strategy: Strategy) -> None:
+        self.bar_types = set([f'candle{bar_type}' for bar_type in strategy.bar_types])
+        self.strategy = strategy
+        conf = TradeBotConf.load()
+        logging.info('init BarSubscriber')
+        subscriptions = []
+        for instrument in self.strategy.instruments:
+            for bar_type in self.bar_types:
+                logging.info(f'subscribe {bar_type}-{instrument}')
+                subscriptions.append(Subscription(f'{bar_type}', {'instId': instrument}))
+        
+        super().__init__(conf.ws_public, subscriptions)
+
+    async def handle_message(self, message: dict):
+        if message.get('arg', {}).get('channel', None) in self.bar_types and message.get('data') and len(message.get('data')) > 0:
+            bars = to_bar(message['data'][0])
+            self.strategy.on_bar(bars)
+        logging.info(f'bar {json.dumps(message)}')
