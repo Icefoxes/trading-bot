@@ -38,23 +38,28 @@ class ConnectionManager:
             }
 
     async def run(self):
-        async with websockets.connect(self.uri) as conn:
-            # login
-            if self.private and self.conf:
-                payload = WsUtils.initLoginParams(**self.conf)
-                await conn.send(payload.decode())
-                await asyncio.sleep(3)
-            # subscribe
-            for sub in self.subscriptions:
-                await conn.send(json.dumps({
-                    'op': 'subscribe',
-                    'args': [sub.arg]
-                }))
-            async for message in conn:
-                await self.handle_message(json.loads(message))
-
+        async for conn in websockets.connect(self.uri):
+            try:
+                # login
+                if self.private and self.conf:
+                    payload = WsUtils.initLoginParams(**self.conf)
+                    await conn.send(payload.decode())
+                    await asyncio.sleep(3)
+                # subscribe
+                for sub in self.subscriptions:
+                    await conn.send(json.dumps({
+                        'op': 'subscribe',
+                        'args': [sub.arg]
+                    }))
+                async for message in conn:
+                    await self.handle_message(json.loads(message))
+            except websockets.ConnectionClosed:
+                logging.error(f"{','.join([sub.channel for sub in self.subscriptions])} reconnecting")
+                continue
+  
     async def handle_message(self, message: dict):
-        pass
+        if message.get('event'):
+            logging.info(f"{','.join([sub.channel for sub in self.subscriptions])} {json.dumps(message)}")
 
 class BalanceSubscribe(ConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
@@ -65,10 +70,11 @@ class BalanceSubscribe(ConnectionManager):
         super().__init__(conf.ws_private, [Subscription(self.channel, {'ccy': 'USDT'})], conf, True)
 
     async def handle_message(self, message: dict):
+        await super().handle_message(message)
         if message.get('arg', {}).get('channel') == self.channel and message.get('data'):
             balance = to_balance(message['data'][0])
             self.strategy.on_balance_status(balance)
-        logging.info(f'balance {json.dumps(message)}')
+        logging.info(f'[balance] {json.dumps(message)}')
 
 class OrderSubscriber(ConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
@@ -79,10 +85,11 @@ class OrderSubscriber(ConnectionManager):
         super().__init__(conf.ws_private, [Subscription(self.channel, {'instType': self.strategy.instrumentType})], conf, True)
 
     async def handle_message(self, message: dict):
+        await super().handle_message(message)
         if message.get('arg', {}).get('channel') == self.channel and message.get('data'):
             orders = to_order(message['data'])
             self.strategy.on_order_status(orders)
-        logging.info(f'order {json.dumps(message)}')
+        logging.info(f'[order] {json.dumps(message)}')
 
 
 class PositionSubscriber(ConnectionManager):
@@ -95,10 +102,11 @@ class PositionSubscriber(ConnectionManager):
 
 
     async def handle_message(self, message: dict):
+        await super().handle_message(message)
         if message.get('arg', {}).get('channel') == self.channel and message.get('data'):
             positions = to_position(message['data'])
             self.strategy.on_position_status(positions)
-        logging.debug(f'position {json.dumps(message)}')
+        logging.debug(f'[position] {json.dumps(message)}')
                 
 
 class TickSubscriber(ConnectionManager):
@@ -110,10 +118,11 @@ class TickSubscriber(ConnectionManager):
         super().__init__(conf.ws_public, [Subscription(self.channel, {'instId': sub}, interval=1) for sub in self.strategy.instruments])
 
     async def handle_message(self, message: dict):
+        await super().handle_message(message)
         if message.get('arg', {}).get('channel') == self.channel and message.get('data') and len(message.get('data')) > 0:
             ticks = to_tick(message['data'][0])
             self.strategy.on_tick(ticks)
-        logging.debug(f'tick {json.dumps(message)}')
+        logging.debug(f'[tick] {json.dumps(message)}')
 
 
 class BarSubscriber(ConnectionManager):
@@ -131,7 +140,8 @@ class BarSubscriber(ConnectionManager):
         super().__init__(conf.ws_public, subscriptions)
 
     async def handle_message(self, message: dict):
+        await super().handle_message(message)
         if message.get('arg', {}).get('channel', None) in self.bar_types and message.get('data') and len(message.get('data')) > 0:
             bars = to_bar(message['data'])
             self.strategy.on_bar(bars)
-        logging.debug(f'bar {json.dumps(message)}')
+        logging.debug(f'[bar] {json.dumps(message)}')
