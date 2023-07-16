@@ -1,6 +1,6 @@
 from typing import List
 import asyncio
-from bot import OrderSubscriber, PositionSubscriber, TickSubscriber, Strategy, BarSubscriber
+from bot import OrderSubscriber, PositionSubscriber, TickSubscriber, Strategy, BarSubscriber, BalanceSubscribe
 
 
 class TradeExecutor():
@@ -9,7 +9,8 @@ class TradeExecutor():
         self.strategy = strategy
 
     async def execute(self) -> List[asyncio.Future]:
-        return await asyncio.gather(OrderSubscriber(self.strategy).run(),
+        return await asyncio.gather(BalanceSubscribe(self.strategy).run(),
+                                    OrderSubscriber(self.strategy).run(),
                                     BarSubscriber(self.strategy).run(),
                                     TickSubscriber(self.strategy).run(),
                                     PositionSubscriber(self.strategy).run())

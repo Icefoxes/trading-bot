@@ -1,9 +1,7 @@
-from datetime import datetime
 import pandas as pd
 import json
 from typing import List
-from bot import Messager, Strategy, Order, Tick
-from bot.strategy import Position
+from bot import Messager, Strategy, Order, Tick, Position
 
 
 class NotificationStrategy(Strategy):
@@ -13,7 +11,6 @@ class NotificationStrategy(Strategy):
                          instrumentType='SWAP', 
                          bar_types=['1m'])
         self.messager = messager
-        self.last_notify = datetime.now()
 
     def on_order_status(self, orders: List[Order]):
         for order in orders:
@@ -25,10 +22,9 @@ class NotificationStrategy(Strategy):
             if pos.pnl_ratio < -20:
                 self.messager.notify_with_interval(f'{json.dumps(pos._asdict(), default=str)}')
 
-    def on_tick(self, tick: Tick):
-        super().on_tick(tick)
+    def on_tick(self, ticks: List[Tick]):
+        super().on_tick(ticks)
         sample = [tick._asdict() for tick in self.ticks[-200:]]
         df = pd.DataFrame(sample)
-        if df.price.std() > 5 and (datetime.now() - self.last_notify).seconds >= 5 * 60:
-            self.last_notify = datetime.now()
+        if df.price.std() > 15:
             self.messager.notify_with_interval(f'price rapid change, current = {sample[-1]["price"]}')

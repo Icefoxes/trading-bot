@@ -2,6 +2,7 @@ runtime/
 app.conf
 sample/*.json
 sample/*.py
+data/*.json
 log.txt
 
 # Byte-compiled / optimized / DLL files

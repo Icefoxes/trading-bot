@@ -13,7 +13,7 @@ class Messager:
         self.session.headers.update({
             'Content-Type': 'application/json',
         })
-        self.last_notify = datetime.now()
+        self.last_notify = None
 
     def notify(self, text) -> bool:
         data = {
@@ -22,13 +22,15 @@ class Messager:
                 'content': f'{self.prefix} {text}'
             }
         }
-        if datetime.now().hour > int(self.start) and datetime.now().hour < int(self.end):
+        now = datetime.utcnow()
+        if now.hour >= int(self.start) and now.hour < int(self.end):
             response = self.session.post(self.url, json=data)
             return 'errmsg' in response.json() and response.json()['errmsg'] == 'ok'
         else:
             logging.info('message = {text} not sent')
 
-    def notify_with_interval(self, text) -> bool:
-        if (datetime.now() - self.last_notify).seconds >= 5 * 60:
-            self.last_notify = datetime.now()
+    def notify_with_interval(self, text, minute: int = 5) -> bool:
+        now = datetime.utcnow()
+        if not self.last_notify or (now - self.last_notify).seconds >= minute * 60:
+            self.last_notify = now
             self.notify(text)

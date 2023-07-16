@@ -2,9 +2,10 @@ import logging
 
 from bot.config import TradeBotConf
 from bot.messager import Messager
-from bot.strategy import Strategy, Order, Position, Tick, Bar, to_tick, to_order, to_bar, to_position
+from bot.model import Order, Position, Tick, Bar, Balance, to_tick, to_order, to_bar, to_position, to_balance
 from bot.exchange import ExchangeClient
-from bot.subscribe import OrderSubscriber, PositionSubscriber, TickSubscriber, BarSubscriber
+from bot.strategy import Strategy
+from bot.subscribe import OrderSubscriber, PositionSubscriber, TickSubscriber, BarSubscriber, BalanceSubscribe
 from bot.executor import TradeExecutor
 
 
