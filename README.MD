@@ -10,6 +10,8 @@ OKX based, currently it can only support real time Tick/Bar/Order/Position live 
 python -m venv runtime
 runtime\Scripts\activate
 pip install -r requirement.txt
+# if requirement.txt not work
+pip3 install python-okx pandas websockets requests
 ```
 
 ### 2. Change Configuration
@@ -38,6 +40,27 @@ implement your own Strategy (extends Strategy) and replace the strategy in `main
 
 ```shell
 python main.py
+```
+
+### 4. Deploy to PROD
+
+#### 4.1 Create /app and execute git clone
+
+```shell
+sudo -s
+mkdir /app
+chown user:user /app
+cd /app
+git clone git@github.com:Icefoxes/trading-bot.git .
+```
+#### 4.2 setup supervisor
+
+```shell
+pip3 install supervisor
+echo_supervisord_conf > /etc/supervisord.conf
+echo bot.ini >> /etc/supervisord.conf
+supervisord -c /etc/supervisord.conf
+supervisorctl start bot
 ```
 
 ## Planned feature
