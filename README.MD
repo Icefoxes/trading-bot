@@ -1,6 +1,6 @@
 ## Introduction
 
-OKX based, currently it can only support real time Tick/Bar/Order/Position live update, and monitor. In `bot/strategies/sample` , created a simple strategy, doing nothing but send notification 
+binance/okx based, currently it can only support real time Tick/Bar/Order/Position live update and monitor. In `bot/strategies/sample` , created a simple strategy, doing nothing but send notification 
 
 ## How to start
 
