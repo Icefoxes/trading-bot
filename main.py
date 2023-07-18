@@ -23,7 +23,7 @@ if __name__ == '__main__':
     logging.info('[2] init messager')
     messager = Messager(conf)
 
-    logging.info('[3] init messager')
+    logging.info('[3] init stragety')
     stragety = NotificationStrategy(messager)
   
     logging.info('[4] init executor')

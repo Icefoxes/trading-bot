@@ -3,23 +3,24 @@ from os import path
 
 class TradeBotConf:
     def __init__(self, conf: ConfigParser) -> None:
-        self.apiKey         = conf['exchange']['apiKey']
-        self.secretKey      = conf['exchange']['secretKey']
-        self.passphrase     = conf['exchange']['passphrase']
-        self.ws_private     = conf['exchange']['ws_private']
-        self.ws_public      = conf['exchange']['ws_public']
-        self.ws_business    = conf['exchange']['ws_business']
-        self.domain         = conf['exchange']['domain']
-        self.useServerTime  = conf.getboolean('exchange', 'useServerTime')
-        self.token          = conf['notification']['token']
-        self.prefix         = conf['notification']['prefix']
-        self.period         = conf['notification']['period']
+        self.okx                   = {}
+        self.okx['apiKey']         = conf['okx']['apiKey']
+        self.okx['secretKey']      = conf['okx']['secretKey']
+        self.okx['passphrase']     = conf['okx']['passphrase']
+        self.okx['ws_private']     = conf['okx']['ws_private']
+        self.okx['ws_public']      = conf['okx']['ws_public']
+        self.okx['ws_business']    = conf['okx']['ws_business']
+        self.okx['domain']         = conf['okx']['domain']
+        self.okx['useServerTime']  = conf.getboolean('okx', 'useServerTime')
+        self.binance               = {}
+        self.binance['apiKey']     = conf['binance']['apiKey']
+        self.binance['secretKey']  = conf['binance']['secretKey']
+        self.token                 = conf['notification']['token']
+        self.prefix                = conf['notification']['prefix']
+        self.period                = conf['notification']['period']
     
     @staticmethod
     def load():
         parser = ConfigParser()
         parser.read(path.join(path.dirname(path.dirname(__file__)), 'app.conf'), encoding='UTF-8')
         return TradeBotConf(parser)
-    
-    def __str__(self) -> str:
-        return self.apiKey

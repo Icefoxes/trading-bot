@@ -1,16 +1,38 @@
-from tinydb import TinyDB, JSONStorage
-from tinydb_serialization import SerializationMiddleware
-from tinydb_serialization.serializers import DateTimeSerializer
-
 from typing import List
 import logging
-from bot import TradeBotConf, ExchangeClient, Balance, Tick, Bar, Order, Position
+import asyncio
+from bot import Balance, Tick, Bar, Order, Position
+
+class Subscriber:
+    def run() -> asyncio.Task:
+        pass
+
+    def stop():
+        pass
 
 
-serialization = SerializationMiddleware(JSONStorage)
-serialization.register_serializer(DateTimeSerializer(), 'TinyDate')
+class Exchange:
+    def get_positions(self) -> List[Position]:
+        pass
 
-tick_db = TinyDB('./data/tick.json', storage=serialization)
+    def get_balance(self) -> Balance:
+        pass
+
+    def place_buy_order(self, instrumentId: str, size: float, price: float) -> Order:
+        pass
+
+    def place_sell_order(self, instrumentId: str, size: float, price: float) -> Order:
+        pass
+    
+    def cancel_order(self, orderId: str, instrumentId: str) -> Order:
+        pass
+    
+    def close_position(self, instrumentId: str):
+        pass
+
+    # get latest 100 bar
+    def get_candlesticks(self, instrumentId: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
+        pass
 
 class Strategy:
     def __init__(self, id: str, instruments: List[str], instrumentType: str, bar_types: List[str]) -> None:
@@ -18,17 +40,16 @@ class Strategy:
         self.instruments = instruments
         self.instrumentType = instrumentType
         self.bar_types = bar_types
-        self.client = ExchangeClient(TradeBotConf.load())
         self.balance: Balance = None
+        self.exchange: Exchange = None
         # local state
-        self.positions = set([])
+        self.positions: List[Position] = []
         self.ticks:List[Tick] = []
         self.bars = {}
 
+
     def on_tick(self, ticks: List[Tick]):
         self.ticks.extend(ticks)
-        for tick in ticks:
-            tick_db.insert(tick._asdict())
         if len(self.ticks) % 100 == 0:
             logging.info(f'ticks to {len(self.ticks)}')
         if len(self.ticks) > 10000:
@@ -44,6 +65,5 @@ class Strategy:
         self.balance = balance
 
     def on_position_status(self, positions: List[Position]):
-        for position in positions:
-            self.positions.add(position)
-        
+        self.positions.clear()
+        self.positions.extend(positions)

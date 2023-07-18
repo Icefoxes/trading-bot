@@ -11,7 +11,7 @@ python -m venv runtime
 runtime\Scripts\activate
 pip install -r requirement.txt
 # if requirement.txt not work
-pip3 install python-okx pandas websockets requests
+pip3 install python-okx pandas websockets requests binance-futures-connector schedule
 ```
 
 ### 2. Change Configuration
@@ -19,7 +19,11 @@ pip3 install python-okx pandas websockets requests
 copy `example.conf` and rename to `app.conf` , change parameter
 
 ```ini
-[exchange]
+[binance]
+apiKey           = apiKey
+secretKey        = secretKey
+
+[okx]
 apiKey           = apiKey
 secretKey        = secretKey
 passphrase       = passphrase
