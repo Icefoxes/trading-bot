@@ -5,7 +5,6 @@ import asyncio
 
 from datetime import datetime
 import time
-import json
 import logging
 
 from bot import TradeBotConf, Strategy, Subscriber,  Order, Position, Balance, Tick, Bar
@@ -19,6 +18,7 @@ class BinanceUMSubscriber(Subscriber):
             'key': conf.binance['apiKey'],
             'secret': conf.binance['secretKey']
         }
+        self.last_tick = int(datetime.now().timestamp() * 1000)
         schedule.every(45).minutes.do(self.renew)
     
     def renew(self):
@@ -50,14 +50,17 @@ class BinanceUMSubscriber(Subscriber):
     def stop(self):
         self.ws.stop()
 
-    def handle_message(self, message: str):
-        data = json.loads(message)
+    def handle_message(self, data: dict):
         event = data.get('e')
+        msg_stamp = data.get('E')
+        
         if not event:
             return
         elif '24hrMiniTicker' == event:
-            tick = Tick(instrument=data.get('s'), price=round(float(data.get('c')), 4), timestmap=datetime.fromtimestamp(int(data.get('E') / 1000)))
-            self.strategy.on_tick([tick])
+            if msg_stamp - self.last_tick >= 1000:
+                tick = Tick(instrument=data.get('s'), price=round(float(data.get('c')), 4), timestmap=datetime.fromtimestamp(int(msg_stamp / 1000)))
+                self.strategy.on_tick([tick])
+            self.last_tick = msg_stamp
         elif 'ORDER_TRADE_UPDATE' == event:
             record = data.get('o', {})
             order = Order(
@@ -102,7 +105,7 @@ class BinanceUMSubscriber(Subscriber):
                     mode=_position.get('mt'),
                     price=float(_position.get('ep')),
                     last=0,
-                    timestamp=datetime.fromtimestamp(int(data['E']) / 1000)
+                    timestamp=datetime.fromtimestamp(int(msg_stamp / 1000))
                 ))
             self.strategy.on_position_status(positions)
 
@@ -115,13 +118,15 @@ class BinanceUMSubscriber(Subscriber):
                     )
                     self.strategy.on_balance_status(balance)
         elif 'kline' == event:
-            record = data.get('k', {})
-            bar = Bar(
-                timestamp=datetime.fromtimestamp(int(data['E']) / 1000),
-                open=float(record['o']),
-                high=float(record['h']),
-                low=float(record['l']),
-                close=float(record['c']),
-                vol=float(record['q']),
-            )
-            self.strategy.on_bar([bar])
+            if msg_stamp - self.last_tick >= 1000: 
+                record = data.get('k', {})
+                bar = Bar(
+                    timestamp=datetime.fromtimestamp(int(msg_stamp) / 1000),
+                    open=float(record['o']),
+                    high=float(record['h']),
+                    low=float(record['l']),
+                    close=float(record['c']),
+                    vol=float(record['q']),
+                )
+                self.strategy.on_bar([bar])
+            self.last_tick = msg_stamp
