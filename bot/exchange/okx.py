@@ -42,21 +42,21 @@ class OkxExchangeClient(Exchange):
             return to_okx_order(response['data']) 
         return []
     
-    def place_buy_order(self, instrumentId: str, size: float, price: float):
-        return self.tradeApi.place_order(instId=instrumentId, tdMode='isolated', side='buy', sz=str(size), px=str(price), ordType='post_only')
+    def place_buy_order(self, symbol: str, size: float, price: float):
+        return self.tradeApi.place_order(instId=symbol, tdMode='isolated', side='buy', sz=str(size), px=str(price), ordType='post_only')
     
-    def place_sell_order(self, instrumentId: str, size: float, price: float):
-        return self.tradeApi.place_order(instId=instrumentId, tdMode='isolated', side='sell', sz=str(size), px=str(price), ordType='post_only')
+    def place_sell_order(self, symbol: str, size: float, price: float):
+        return self.tradeApi.place_order(instId=symbol, tdMode='isolated', side='sell', sz=str(size), px=str(price), ordType='post_only')
     
-    def cancel_order(self, orderId: str, instrumentId: str):
-        return self.tradeApi.cancel_order(instId=instrumentId, ordId=orderId)
+    def cancel_order(self, orderId: str, symbol: str):
+        return self.tradeApi.cancel_order(instId=symbol, ordId=orderId)
     
-    def close_position(self, instrumentId: str):
-        return self.tradeApi.close_positions(instId=instrumentId, mgnMode='isolated')
+    def close_position(self, symbol: str):
+        return self.tradeApi.close_positions(instId=symbol, mgnMode='isolated')
 
     # get latest 100 bar
-    def get_candlesticks(self, instrumentId: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
-        response = self.marketApi.get_candlesticks(instId=instrumentId, bar=bar, limit=str(limit))
+    def get_candlesticks(self, symbol: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
+        response = self.marketApi.get_candlesticks(instId=symbol, bar=bar, limit=str(limit))
         if response.get('code') == '0' and response.get('data') and len(response['data']) > 0:
             return to_okx_bar(response['data']) 
         return []

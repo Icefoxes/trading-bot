@@ -1,0 +1,1 @@
+cd hades-ui && eco HOST=$host >> .env.production && npm run build .env.production

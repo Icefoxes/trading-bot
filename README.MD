@@ -11,7 +11,7 @@ python -m venv runtime
 runtime\Scripts\activate
 pip install -r requirement.txt
 # if requirement.txt not work
-pip3 install python-okx pandas websockets requests binance-futures-connector schedule
+pip3 install python-okx pandas websockets requests binance-futures-connector schedule "uvicorn[standard]" fastapi
 ```
 
 ### 2. Change Configuration

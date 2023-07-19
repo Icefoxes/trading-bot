@@ -1,0 +1,1 @@
+uvicorn hades.main:app

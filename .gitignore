@@ -4,7 +4,7 @@ sample/*.json
 sample/*.py
 data/*.json
 log.txt
-
+hades-ui/node_modules
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
