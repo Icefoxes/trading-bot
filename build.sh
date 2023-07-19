@@ -1,1 +1,1 @@
-cd hades-ui && echo HOST=$HOST > .env.production && npm run build .env.production
+cd hades-ui && echo REACT_APP_DOMAIN=$HOST > .env && npm run build
