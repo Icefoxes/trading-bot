@@ -1,8 +1,15 @@
-import { FC } from "react";
-import { KLineComponent } from '../../components';
-import { useGetKlineQuery } from '../../services';
+import { FC } from 'react';
+import { useParams } from 'react-router-dom';
+import { KLineComponent, AccountComponent } from '../../components';
+import { useGetKlineQuery, useGetOrdersQuery, useGetPositionsQuery } from '../../services';
 
 export const MarketContainer: FC<{}> = () => {
-    const { data } = useGetKlineQuery({ symbol: 'BTC-USDT-SWAP', interval: '1m' })
-    return <KLineComponent bars={data || []} />
+    let { interval } = useParams();
+    const { data } = useGetKlineQuery({ symbol: 'BTC-USDT-SWAP', interval: interval || '1m' })
+    const { data: orders } = useGetOrdersQuery({});
+    const { data: positions } = useGetPositionsQuery({});
+    return <div>
+        <KLineComponent bars={data || []} />
+        <AccountComponent orders={orders || []} positions={positions || []} />
+    </div>
 }
