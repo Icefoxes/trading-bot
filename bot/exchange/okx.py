@@ -65,7 +65,7 @@ class OkxExchangeClient(Exchange):
 def to_okx_tick(data: dict) -> List[Tick]:
     ticks = []
     ticks.append(Tick(
-        instrument=data['instId'],
+        symbol=data['instId'],
         price=float(data['last']),
         timestmap = datetime.fromtimestamp(int(data['ts']) / 1000)
     ))
@@ -76,8 +76,7 @@ def to_okx_position(data: List[dict]) -> List[Position]:
     positions = []
     for record in data:
         positions.append(Position(
-            positionId=record.get('posId'),
-            instrument=record.get('instId'),
+            symbol=record.get('instId'),
             instrumentType=record.get('instType'),
             side=record.get('posSide'),
             quantity=float(record.get('pos')),
@@ -112,7 +111,7 @@ def to_okx_order(records: List[dict]) -> List[Order]:
         orders.append(Order(
             orderId=data.get('ordId'),
             orderType=data.get('ordType'),
-            instrument=data.get('instId'),
+            symbol=data.get('instId'),
             instrumentType=data.get('instType'),
             price=float(data.get('px')),
             mode=data.get('tdMode'),
@@ -125,11 +124,13 @@ def to_okx_order(records: List[dict]) -> List[Order]:
     return orders
 
 
-def to_okx_balance(records: dict) -> Balance:
+def to_okx_balance(records: dict) -> List[Balance]:
+    balance = []
     if 'details' in records:
         for record in records['details']:
-            if record['ccy'] == 'USDT':
-                return Balance(availableBalance=float(record.get('availBal')))
+            if float(record.get('availBal')) != 0:
+                balance.append(Balance(asset=record['ccy'], availableBalance=float(record.get('availBal'))))
+    return balance
 
 
 class Subscription:
@@ -259,10 +260,10 @@ class BarSubscriber(OkxConnectionManager):
         conf = TradeBotConf.load()
         logging.info('init BarSubscriber')
         subscriptions = []
-        for instrument in self.strategy.symbols:
+        for symbol in self.strategy.symbols:
             for bar_type in self.bar_types:
-                logging.info(f'subscribe {bar_type}-{instrument}')
-                subscriptions.append(Subscription(f'{bar_type}', {'instId': instrument}, interval=1))
+                logging.info(f'subscribe {bar_type}-{symbol}')
+                subscriptions.append(Subscription(f'{bar_type}', {'instId': symbol}, interval=1))
         
         super().__init__(conf.okx['ws_public'], subscriptions)
 

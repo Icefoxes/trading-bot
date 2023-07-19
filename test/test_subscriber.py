@@ -163,10 +163,11 @@ def test_binance_subscriber():
     assert len(strategy.orders) > 0
     assert strategy.orders[0].status == 'NEW'
     um.handle_message(json.loads(account_data.strip('\n').strip()))
-    assert strategy.balance is not None
-    assert strategy.balance.availableBalance == 122624.12
+    assert len(strategy.balance) > 0
+    assert strategy.balance[0].availableBalance == 50.12
+
     assert len(strategy.positions) > 0
-    assert strategy.positions[0].unrealized_profit == 0
+    assert strategy.positions[0].unrealized_profit == 2850.21200
     um.handle_message(json.loads(tick_data))
     assert len(strategy.ticks) > 0
     assert strategy.ticks[0].price == 0.0025

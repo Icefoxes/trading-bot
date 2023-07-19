@@ -1,0 +1,123 @@
+[
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "BTC",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "ADA",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "XRP",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "TUSD",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "DOT",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "BNB",
+        "balance": "1",
+        "crossWalletBalance": "1",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "1",
+        "maxWithdrawAmount": "1",
+        "marginAvailable": true,
+        "updateTime": 1689723692935
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "ETH",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "USDT",
+        "balance": "100",
+        "crossWalletBalance": "100",
+        "crossUnPnl": "100",
+        "availableBalance": "100",
+        "maxWithdrawAmount": "100",
+        "marginAvailable": true,
+        "updateTime": 1689723692935
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "USDP",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "USDC",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    },
+    {
+        "accountAlias": "aaaaaaaaaaaaaaaaaaa",
+        "asset": "BUSD",
+        "balance": "0.00000000",
+        "crossWalletBalance": "0.00000000",
+        "crossUnPnl": "0.00000000",
+        "availableBalance": "0.00000000",
+        "maxWithdrawAmount": "0.00000000",
+        "marginAvailable": true,
+        "updateTime": 0
+    }
+]

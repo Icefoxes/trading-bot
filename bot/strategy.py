@@ -48,7 +48,7 @@ class Strategy:
         self.symbols = symbols
         self.instrumentType = instrumentType
         self.klines = klines
-        self.balance: Balance = None
+        self.balance: List[Balance] = []
         self.exchange: Exchange = None
         # local state
         self.positions: List[Position] = []
@@ -71,8 +71,9 @@ class Strategy:
     def on_order_status(self, orders: List[Order]):
         pass
 
-    def on_balance_status(self, balance: Balance):
-        self.balance = balance
+    def on_balance_status(self, balance: List[Balance]):
+        self.balance.clear()
+        self.balance.extend(balance)
 
     def on_position_status(self, positions: List[Position]):
         self.positions.clear()
