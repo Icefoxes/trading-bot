@@ -1,14 +1,13 @@
-from typing import List
-import logging
 import asyncio
+from typing import List
+from enum import Enum
+import logging
+
 from bot import Balance, Tick, Bar, Order, Position
 
-class Subscriber:
-    def run() -> asyncio.Task:
-        pass
-
-    def stop():
-        pass
+class ExchangeEnum(Enum):
+    OKX = 1
+    Binance = 2
 
 
 class Exchange:
@@ -18,28 +17,37 @@ class Exchange:
     def get_balance(self) -> Balance:
         pass
 
-    def place_buy_order(self, instrumentId: str, size: float, price: float) -> Order:
+    def place_buy_order(self, symbol: str, size: float, price: float) -> Order:
         pass
 
-    def place_sell_order(self, instrumentId: str, size: float, price: float) -> Order:
+    def place_sell_order(self, symbol: str, size: float, price: float) -> Order:
         pass
     
-    def cancel_order(self, orderId: str, instrumentId: str) -> Order:
+    def cancel_order(self, orderId: str, symbol: str) -> Order:
         pass
     
-    def close_position(self, instrumentId: str):
+    def close_position(self, symbol: str):
         pass
 
     # get latest 100 bar
-    def get_candlesticks(self, instrumentId: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
+    def get_candlesticks(self, symbol: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
         pass
 
+
+class Subscriber:
+    def run(self) -> asyncio.Task:
+        pass
+
+    def stop(self):
+        pass
+
+
 class Strategy:
-    def __init__(self, id: str, instruments: List[str], instrumentType: str, bar_types: List[str]) -> None:
+    def __init__(self, id: str, symbols: List[str], instrumentType: str, klines: List[str]) -> None:
         self.id = id
-        self.instruments = instruments
+        self.symbols = symbols
         self.instrumentType = instrumentType
-        self.bar_types = bar_types
+        self.klines = klines
         self.balance: Balance = None
         self.exchange: Exchange = None
         # local state
@@ -47,7 +55,9 @@ class Strategy:
         self.ticks:List[Tick] = []
         self.bars = {}
 
-
+    def on_init_exchange(self, exchange: Exchange):
+        self.exchange = exchange
+        
     def on_tick(self, ticks: List[Tick]):
         self.ticks.extend(ticks)
         if len(self.ticks) % 100 == 0:

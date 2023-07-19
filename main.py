@@ -1,6 +1,6 @@
 import signal
 from bot.strategies import NotificationStrategy
-from bot import Messager, TradeExecutor, TradeBotConf
+from bot import Messager, TradeExecutor, TradeBotConf, ExchangeEnum
 import asyncio
 import logging
 import platform
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     stragety = NotificationStrategy(messager)
   
     logging.info('[4] init executor')
-    executor = TradeExecutor(stragety, backtesting=False)
+    executor = TradeExecutor(stragety, backtesting=False, exchange=ExchangeEnum.Binance)
 
     loop = asyncio.get_event_loop()
     if platform.platform().find('Windows') == -1:

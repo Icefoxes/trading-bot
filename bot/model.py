@@ -12,4 +12,4 @@ Position = namedtuple('Position', ['positionId','instrument', 'instrumentType',
                                    'side', 'quantity', 'unrealized_profit', 
                                    'pnl_ratio', 'mode', 'price', 'last','timestamp'])
 
-Balance = namedtuple('Balance',['frozenBalance', 'availableBalance'])
+Balance = namedtuple('Balance',['availableBalance'])

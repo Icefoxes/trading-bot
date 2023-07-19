@@ -129,7 +129,7 @@ def to_okx_balance(records: dict) -> Balance:
     if 'details' in records:
         for record in records['details']:
             if record['ccy'] == 'USDT':
-                return Balance(availableBalance=float(record.get('availBal')), frozenBalance=float(record.get('frozenBal')))
+                return Balance(availableBalance=float(record.get('availBal')))
 
 
 class Subscription:
@@ -186,6 +186,7 @@ class OkxConnectionManager:
         if message.get('event'):
             logging.info(f"{','.join([sub.channel for sub in self.subscriptions])} {json.dumps(message)}")
 
+
 class BalanceSubscribe(OkxConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
         self.channel = 'account'
@@ -200,6 +201,7 @@ class BalanceSubscribe(OkxConnectionManager):
             balance = to_okx_balance(message['data'][0])
             self.strategy.on_balance_status(balance)
         logging.info(f'[balance] {json.dumps(message)}')
+
 
 class OrderSubscriber(OkxConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
@@ -216,6 +218,7 @@ class OrderSubscriber(OkxConnectionManager):
             self.strategy.on_order_status(orders)
         logging.info(f'[order] {json.dumps(message)}')
 
+
 class PositionSubscriber(OkxConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
         self.channel = 'positions'
@@ -231,14 +234,15 @@ class PositionSubscriber(OkxConnectionManager):
             positions = to_okx_position(message['data'])
             self.strategy.on_position_status(positions)
         logging.debug(f'[position] {json.dumps(message)}')
-                
+
+
 class TickSubscriber(OkxConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
         self.channel = 'tickers'
         self.strategy = strategy
         conf = TradeBotConf.load()
         logging.info('init TickSubscriber')
-        super().__init__(conf.okx['ws_public'], [Subscription(self.channel, {'instId': sub}, interval=1) for sub in self.strategy.instruments])
+        super().__init__(conf.okx['ws_public'], [Subscription(self.channel, {'instId': sub}, interval=1) for sub in self.strategy.symbols])
 
     async def handle_message(self, message: dict):
         await super().handle_message(message)
@@ -247,14 +251,15 @@ class TickSubscriber(OkxConnectionManager):
             self.strategy.on_tick(ticks)
         logging.debug(f'[tick] {json.dumps(message)}')
 
+
 class BarSubscriber(OkxConnectionManager):
     def __init__(self, strategy: Strategy) -> None:
-        self.bar_types = set([f'candle{bar_type}' for bar_type in strategy.bar_types])
+        self.bar_types = set([f'candle{bar_type}' for bar_type in strategy.klines])
         self.strategy = strategy
         conf = TradeBotConf.load()
         logging.info('init BarSubscriber')
         subscriptions = []
-        for instrument in self.strategy.instruments:
+        for instrument in self.strategy.symbols:
             for bar_type in self.bar_types:
                 logging.info(f'subscribe {bar_type}-{instrument}')
                 subscriptions.append(Subscription(f'{bar_type}', {'instId': instrument}, interval=1))
@@ -272,8 +277,10 @@ class BarSubscriber(OkxConnectionManager):
 class OkxSubscriber(Subscriber):
     def __init__(self, strategy: Strategy) -> None:
         self.strategy = strategy
-
-    async def run(self) -> List[asyncio.Future]:
+        self.strategy.on_init_exchange(OkxExchangeClient(TradeBotConf.load()))
+    
+    
+    def run(self) -> List[asyncio.Future]:
         return asyncio.gather(BalanceSubscribe(self.strategy).run(),
                             OrderSubscriber(self.strategy).run(),
                             BarSubscriber(self.strategy).run(),

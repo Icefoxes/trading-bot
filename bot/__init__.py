@@ -3,9 +3,9 @@ import logging
 from bot.config import TradeBotConf
 from bot.messager import Messager
 from bot.model import Order, Position, Tick, Bar, Balance
-from bot.strategy import Strategy, Exchange, Subscriber
-from bot.binance_extension import BinanceUMSubscriber
-from bot.okx_extension import OkxSubscriber
+from bot.strategy import Strategy, Exchange, Subscriber, ExchangeEnum
+from bot.exchange.binance import BinanceUMSubscriber
+from bot.exchange.okx import OkxSubscriber
 from bot.executor import TradeExecutor
 
 
@@ -20,6 +20,7 @@ __all__ = ['TradeBotConf',
            'Strategy',
            'Exchange',
            'Subscriber',
+           'ExchangeEnum',
            'BinanceUMSubscriber',
            'OkxSubscriber',
            'TradeExecutor',

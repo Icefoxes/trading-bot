@@ -7,11 +7,11 @@ from bot import Messager, Strategy, Order, Tick, Position
 class NotificationStrategy(Strategy):
     def __init__(self, messager: Messager) -> None:
         super().__init__(id='a4e16024-ec4c-42f6-a6ad-845419df0788', 
-                         # binance is BTCUSDT
-                         # okx is BTC-USDT-SWAP
-                         instruments=['BTCUSDT'],
+                         # Binance is BTCUSDT
+                         # OKX is BTC-USDT-SWAP
+                         symbols=['BTCUSDT'],
                          instrumentType='SWAP', 
-                         bar_types=['1m'])
+                         klines=['1m'])
         self.messager = messager
 
     def on_order_status(self, orders: List[Order]):

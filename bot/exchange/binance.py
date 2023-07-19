@@ -1,40 +1,80 @@
 from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from binance.um_futures import UMFutures
 import schedule
-import asyncio
 
+import asyncio
 from datetime import datetime
+from typing import List
 import time
 import logging
 
-from bot import TradeBotConf, Strategy, Subscriber,  Order, Position, Balance, Tick, Bar
+from bot import TradeBotConf, Strategy, Subscriber, Exchange,  Order, Position, Balance, Tick, Bar
 
+class BinanceUMExchangeClient(Exchange):
+    def __init__(self,  conf: TradeBotConf) -> None:
+        self.conf = {
+            'key': conf.binance['apiKey'],
+            'secret': conf.binance['secretKey']
+        }
+        self.client = UMFutures(**self.conf)
+       
+    # Account Info
+    def get_positions(self) -> List[Position]:
+        response = self.client.account()
+        return []
 
+    def get_balance(self):
+        return self.client.account()
+    # Trade Info
+    def get_orders(self) -> List[Order]:
+        response = self.client.get_orders()
+        return []
+    
+    def place_buy_order(self, symbol: str, size: float, price: float):
+        pass
+    
+    def place_sell_order(self, symbol: str, size: float, price: float):
+        pass
+    
+    def cancel_order(self, orderId: str, symbol: str):
+        pass
+    
+    def close_position(self, symbol: str):
+        pass
+
+    # get latest 100 bar
+    def get_candlesticks(self, symbol: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
+        return []
+    
 class BinanceUMSubscriber(Subscriber):
     def __init__(self, strategy: Strategy) -> None:
         self.strategy = strategy
+        self.strategy.on_init_exchange(BinanceUMExchangeClient(TradeBotConf.load()))
         conf = TradeBotConf.load()
         self.conf = {
             'key': conf.binance['apiKey'],
             'secret': conf.binance['secretKey']
         }
-        self.last_tick = int(datetime.now().timestamp() * 1000)
+        self.listenKey: str = None
+        self.last_tick: int = None
+        self.last_bar : int = None
         schedule.every(45).minutes.do(self.renew)
     
     def renew(self):
         logging.info('renew key')
-        self.client.renew_listen_key(self.listenKey)
+        if self.listenKey:
+            self.client.renew_listen_key(self.listenKey)
     
     def _run(self):
         self.client = UMFutures(**self.conf)
         self.listenKey = self.client.new_listen_key()['listenKey']
         self.ws = UMFuturesWebsocketClient()
         idx = 1
-        for symbol in self.strategy.instruments:
+        for symbol in self.strategy.symbols:
             self.ws.mini_ticker(id=idx, callback=self.handle_message, symbol=symbol)
             idx += 1
-        for symbol in self.strategy.instruments:
-            for bar_type in self.strategy.bar_types:
+        for symbol in self.strategy.symbols:
+            for bar_type in self.strategy.klines:
                 self.ws.kline(id=idx, callback=self.handle_message, symbol=symbol, interval=bar_type)
                 idx += 1
         self.ws.user_data(listen_key=self.listenKey, id=idx+1, callback=self.handle_message)
@@ -57,7 +97,7 @@ class BinanceUMSubscriber(Subscriber):
         if not event:
             return
         elif '24hrMiniTicker' == event:
-            if msg_stamp - self.last_tick >= 1000:
+            if not self.last_tick or msg_stamp - self.last_tick >= 1000:
                 tick = Tick(instrument=data.get('s'), price=round(float(data.get('c')), 4), timestmap=datetime.fromtimestamp(int(msg_stamp / 1000)))
                 self.strategy.on_tick([tick])
             self.last_tick = msg_stamp
@@ -91,8 +131,9 @@ class BinanceUMSubscriber(Subscriber):
             self.strategy.on_order_status([order])
         elif 'ACCOUNT_UPDATE' == event:
             record = data.get('a', {})
+            # handle positions
             _positions = record.get('P')
-            positions = []
+            positions: List[Position] = []
             for _position in _positions:
                 positions.append(Position(
                     positionId='',
@@ -114,11 +155,10 @@ class BinanceUMSubscriber(Subscriber):
                 if _balance.get('a') == 'USDT':
                     balance = Balance(
                         availableBalance=round(float(_balance.get('wb')), 2),
-                        frozenBalance=0
                     )
                     self.strategy.on_balance_status(balance)
         elif 'kline' == event:
-            if msg_stamp - self.last_tick >= 1000: 
+            if not self.last_bar or msg_stamp - self.last_bar >= 1000: 
                 record = data.get('k', {})
                 bar = Bar(
                     timestamp=datetime.fromtimestamp(int(msg_stamp) / 1000),
@@ -129,4 +169,4 @@ class BinanceUMSubscriber(Subscriber):
                     vol=float(record['q']),
                 )
                 self.strategy.on_bar([bar])
-            self.last_tick = msg_stamp
+            self.last_bar = msg_stamp
