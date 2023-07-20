@@ -84,7 +84,6 @@ def to_okx_position(data: List[dict]) -> List[Position]:
             unrealized_profit_ratio = round(float(record.get('uplRatio')) * 100, 2) ,
             mode=record.get('mgnMode'),
             price=float(record.get('avgPx')),
-            last=float(record.get('last')),
             timestamp=datetime.fromtimestamp(int(record['cTime']) / 1000)
         ))
     return positions

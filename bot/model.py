@@ -10,6 +10,6 @@ Order = namedtuple('Orders', ['orderId', 'orderType', 'symbol',
 
 Position = namedtuple('Position', ['symbol', 'instrumentType', 
                                    'side', 'quantity', 'unrealized_profit', 
-                                   'unrealized_profit_ratio', 'mode', 'price', 'last','timestamp'])
+                                   'unrealized_profit_ratio', 'mode', 'price', 'timestamp'])
 
 Balance = namedtuple('Balance',['asset', 'availableBalance'])

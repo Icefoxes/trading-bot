@@ -32,7 +32,6 @@ class BinanceUMExchangeClient(Exchange):
                     unrealized_profit_ratio = round(float(pos['unrealizedProfit']) / float(pos['initialMargin']) * 100, 2),
                     mode='isolated' if pos['isolated'] else 'cross',
                     price=float(pos['entryPrice']),
-                    last=0,
                     timestamp=datetime.fromtimestamp(int(pos['updateTime'] / 1000))
                 ))
         return response
@@ -200,7 +199,6 @@ class BinanceUMSubscriber(Subscriber):
                         unrealized_profit_ratio = round(float(_position['up']) / float(_position['iw']) * 100, 2),
                         mode=_position.get('mt'),                    
                         price=float(_position['ep']),            # entry price
-                        last=0,
                         timestamp=datetime.fromtimestamp(int(msg_stamp / 1000))
                     ))
             self.strategy.on_position_status(positions)
