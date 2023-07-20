@@ -29,7 +29,7 @@ class BinanceUMExchangeClient(Exchange):
                     side=pos['positionSide'],
                     quantity=float(pos['positionAmt']),
                     unrealized_profit=round(float(pos['unrealizedProfit']), 3),
-                    pnl_ratio = round(float(pos['unrealizedProfit']) / float(pos['initialMargin'])) * 100,
+                    unrealized_profit_ratio = round(float(pos['unrealizedProfit']) / float(pos['initialMargin']) * 100, 2),
                     mode='isolated' if pos['isolated'] else 'cross',
                     price=float(pos['entryPrice']),
                     last=0,
@@ -197,7 +197,7 @@ class BinanceUMSubscriber(Subscriber):
                         side=_position.get('ps'),
                         quantity=float(_position['pa']),
                         unrealized_profit=round(float(_position['up']), 3),
-                        pnl_ratio = round(float(_position['up']) / float(_position['iw']) * 100, 3),
+                        unrealized_profit_ratio = round(float(_position['up']) / float(_position['iw']) * 100, 2),
                         mode=_position.get('mt'),                    
                         price=float(_position['ep']),            # entry price
                         last=0,

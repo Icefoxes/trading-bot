@@ -4,7 +4,7 @@ export interface Position {
     side: string;
     quantity: number;
     unrealized_profit: number;
-    pnl_ratio: number;
+    unrealized_profit_ratio: number;
     mode: string;
     price: number;
     timestamp: Date;

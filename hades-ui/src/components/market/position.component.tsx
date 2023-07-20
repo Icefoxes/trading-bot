@@ -29,8 +29,8 @@ export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) 
 
         {
             title: 'Unrealized Profit Ratio',
-            dataIndex: 'pnl_ratio',
-            key: 'pnl_ratio',
+            dataIndex: 'unrealized_profit_ratio',
+            key: 'unrealized_profit_ratio',
         },
         {
             title: 'Mode',

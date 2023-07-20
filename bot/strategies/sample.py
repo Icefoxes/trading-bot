@@ -21,7 +21,7 @@ class NotificationStrategy(Strategy):
     def on_position_status(self, positions: List[Position]):
         super().on_position_status(positions)
         for pos in positions:
-            if pos.pnl_ratio < -20:
+            if pos.unrealized_profit_ratio < -20:
                 self.messager.notify_with_interval(f'{json.dumps(pos._asdict(), default=str)}')
 
     def on_tick(self, ticks: List[Tick]):

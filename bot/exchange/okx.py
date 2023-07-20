@@ -81,7 +81,7 @@ def to_okx_position(data: List[dict]) -> List[Position]:
             side=record.get('posSide'),
             quantity=float(record.get('pos')),
             unrealized_profit=round(float(record.get('upl')), 2),
-            pnl_ratio = round(float(record.get('uplRatio')) * 100, 2) ,
+            unrealized_profit_ratio = round(float(record.get('uplRatio')) * 100, 2) ,
             mode=record.get('mgnMode'),
             price=float(record.get('avgPx')),
             last=float(record.get('last')),
