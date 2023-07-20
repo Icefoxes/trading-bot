@@ -19,7 +19,7 @@ root.render(
       <Auth0Provider domain="dev-a2m7lmtzvdghj12e.us.auth0.com"
         clientId="WiXLFeytl0NwvTFOhISHcjOGBRuHZqmy"
         authorizationParams={{
-          redirect_uri: window.location.origin + '/web'
+          redirect_uri: window.location.origin
         }}>
         <RootRouter />
       </Auth0Provider>
