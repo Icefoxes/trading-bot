@@ -34,6 +34,4 @@ class SPAStaticFiles(StaticFiles):
                 response = await super().get_response('.', scope)
         return response
 
-app.mount("/web/", SPAStaticFiles(directory="hades-ui/build", html=True), name="web")
-
 print(app.routes)

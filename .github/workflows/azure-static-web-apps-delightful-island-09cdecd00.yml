@@ -31,7 +31,7 @@ jobs:
           api_location: "api" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
-          app_build_command: REACT_APP_DOMAIN=${{ secrets.REACT_APP_DOMAIN }} npm run build
+          app_build_command: "REACT_APP_DOMAIN=${{ secrets.REACT_APP_DOMAIN }} npm run build"
         env:
           REACT_APP_DOMAIN: ${{ secrets.REACT_APP_DOMAIN }}
 
