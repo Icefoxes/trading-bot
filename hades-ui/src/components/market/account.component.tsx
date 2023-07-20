@@ -3,10 +3,11 @@ import { Tabs } from 'antd';
 
 import { OrderComponent } from './order.component';
 import { PositionComponent } from './position.component';
-import { Order, Position } from '../../models';
+import { BalanceComponent } from './balance.component';
+import { Order, Position, Balance } from '../../models';
 
 
-export const AccountComponent: FC<{ orders: Order[], positions: Position[] }> = ({ orders, positions }) => {
+export const AccountComponent: FC<{ orders: Order[], positions: Position[], balances: Balance[] }> = ({ orders, positions, balances }) => {
     return <Tabs items={[
         {
             key: '1',
@@ -17,6 +18,11 @@ export const AccountComponent: FC<{ orders: Order[], positions: Position[] }> = 
             key: '2',
             label: `Orders`,
             children: <OrderComponent orders={orders} />,
+        },
+        {
+            key: '3',
+            label: `Balance`,
+            children: <BalanceComponent balances={balances} />,
         },
     ]}>
     </Tabs >

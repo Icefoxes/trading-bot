@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { SiteBasicQuery } from './shared';
-import { Kline, Order, Position } from '../models';
+import { Kline, Order, Position, Balance } from '../models';
 
 
 export const marketApi = createApi({
@@ -16,6 +16,9 @@ export const marketApi = createApi({
         getPositions: builder.query<Position[], {}>({
             query: () => `positions`,
         }),
+        getBalances: builder.query<Balance[], {}>({
+            query: () => `balances`,
+        }),
     }),
 })
 
@@ -23,5 +26,6 @@ export const marketApi = createApi({
 export const {
     useGetKlineQuery,
     useGetOrdersQuery,
-    useGetPositionsQuery
+    useGetPositionsQuery,
+    useGetBalancesQuery
 } = marketApi;

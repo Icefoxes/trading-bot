@@ -20,6 +20,7 @@ app.add_middleware(
 app.include_router(market_router, prefix='/api/v1/klines')
 app.include_router(position_router, prefix='/api/v1/positions')
 app.include_router(order_router, prefix='/api/v1/orders')
+app.include_router(balance_router, prefix='/api/v1/balances')
 
 app.mount("/", StaticFiles(directory="hades-ui/build", html=True), name="build")
 
