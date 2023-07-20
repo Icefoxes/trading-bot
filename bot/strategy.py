@@ -17,6 +17,9 @@ class Exchange:
     def get_balance(self) -> Balance:
         pass
 
+    def get_orders(self) -> List[Order]:
+        pass
+
     def place_buy_order(self, symbol: str, size: float, price: float) -> Order:
         pass
 

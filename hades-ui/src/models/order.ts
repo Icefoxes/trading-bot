@@ -4,10 +4,8 @@ export interface Order {
     symbol: string;
     instrumentType: string;
     price: number;
-    mode: string;
     status: string;
     side: string;
-    lever: number;
-    qty: number;
+    quantity: number;
     timestamp: Date;
 }

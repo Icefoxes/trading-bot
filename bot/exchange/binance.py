@@ -56,6 +56,22 @@ class BinanceUMExchangeClient(Exchange):
         }
         return self.client.new_order(**params)
     
+    def get_orders(self) -> List[Order]:
+        orders = []
+        for record in self.client.get_orders():
+            orders.append(Order(
+                orderId=record['orderId'],
+                orderType=record['type'],
+                symbol=record['symbol'],
+                instrumentType='SWAP',
+                price=float(record['price']),
+                mode='',
+                status=record['status'],
+                side=record['side'],
+                quantity=float(record['origQty']),
+                timestamp=datetime.fromtimestamp(record['updateTime'] / 1000)
+            ))
+        return orders
     def place_sell_order(self, symbol: str, size: float, price: float):
         params = {
             'symbol': symbol,
@@ -157,7 +173,6 @@ class BinanceUMSubscriber(Subscriber):
                 symbol=record.get('s'),
                 instrumentType='SWAP',
                 price=float(record.get('ap')),
-                mode='mode',
                 # NEW
                 # CANCELED
                 # CALCULATED
@@ -167,8 +182,7 @@ class BinanceUMSubscriber(Subscriber):
                 status=record.get('x'),
                 # BUY || SELL
                 side=record.get('S'),
-                lever=0,
-                qty=float(record.get('q')),
+                quantity=float(record.get('q')),
                 timestamp=datetime.fromtimestamp(int(record.get('T')) / 1000)
             )
             self.strategy.on_order_status([order])

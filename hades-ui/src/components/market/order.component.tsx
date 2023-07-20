@@ -18,8 +18,8 @@ export const OrderComponent: FC<{ orders: Order[] }> = ({ orders }) => {
         },
         {
             title: 'Size',
-            dataIndex: 'qty',
-            key: 'qty',
+            dataIndex: 'quantity',
+            key: 'quantity',
         },
         {
             title: 'Entry Price',

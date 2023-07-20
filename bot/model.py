@@ -5,8 +5,8 @@ Tick = namedtuple('Tick', ['symbol', 'price', 'timestmap'])
 Bar = namedtuple('Bar', ['timestamp', 'open', 'high', 'low', 'close', 'vol'])
 
 Order = namedtuple('Orders', ['orderId', 'orderType', 'symbol', 
-                              'instrumentType', 'price', 'mode',
-                                'status', 'side', 'lever', 'qty', 'timestamp'])
+                              'instrumentType', 'price', 
+                                'status', 'side', 'quantity', 'timestamp'])
 
 Position = namedtuple('Position', ['symbol', 'instrumentType', 
                                    'side', 'quantity', 'unrealized_profit', 

@@ -114,11 +114,9 @@ def to_okx_order(records: List[dict]) -> List[Order]:
             symbol=data.get('instId'),
             instrumentType=data.get('instType'),
             price=float(data.get('px')),
-            mode=data.get('tdMode'),
             status=data.get('state'),
             side=data.get('side'),
-            lever=int(data.get('lever')),
-            qty=0,
+            quantity=0,
             timestamp=datetime.fromtimestamp(int(data.get('cTime')) / 1000)
         ))
     return orders
