@@ -65,7 +65,6 @@ class BinanceUMExchangeClient(Exchange):
                 symbol=record['symbol'],
                 instrumentType='SWAP',
                 price=float(record['price']),
-                mode='',
                 status=record['status'],
                 side=record['side'],
                 quantity=float(record['origQty']),
