@@ -37,7 +37,8 @@ jobs:
         with:
           name: trading-bot-api
           path: |
-            hades 
+            .
+            !hades-ui/
             !runtime/
 
   deploy:
