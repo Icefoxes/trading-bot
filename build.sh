@@ -1,1 +1,0 @@
-cd hades-ui && echo REACT_APP_DOMAIN=$HOST > .env && npm run build

@@ -14,7 +14,7 @@ const router = createBrowserRouter([
             },
         ]
     },
-], { basename: '/web' });
+]);
 
 export const RootRouter = () => {
     return <RouterProvider router={router} />
