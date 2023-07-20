@@ -1,10 +1,14 @@
 import React from 'react';
-import { Avatar, Layout, Menu } from 'antd';
-import { Outlet, Link } from 'react-router-dom';
+import { Avatar, Button, Layout, Menu, Tooltip, Result } from 'antd';
+import { LoginOutlined, LogoutOutlined } from '@ant-design/icons';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { useAuth0 } from "@auth0/auth0-react";
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content, Footer, } = Layout;
 
 export const BasicLayout: React.FC = () => {
+    const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+    const navigate = useNavigate();
     return (
         <Layout className='layout'>
             <Header style={{ display: 'flex', alignItems: 'center', width: '100vw' }}>
@@ -28,14 +32,25 @@ export const BasicLayout: React.FC = () => {
                             label: <Link to='/klines/15m'>15m</Link>
                         }
                     ]} />
-                <Avatar src='https://xsgames.co/randomusers/avatar.php?g=pixel&key=2' />
+                {isAuthenticated && <>
+                    <Tooltip title='logout'><Button type="primary" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} icon={<LoginOutlined />} /></Tooltip>
+                    <Avatar src={user?.picture} />
+                </>}
+                {!isAuthenticated && <Tooltip title='login'><Button type="primary" onClick={() => loginWithRedirect()} icon={<LogoutOutlined />} /></Tooltip>}
+
             </Header>
-            <Content style={{ padding: '0 50px' }}>
+            <Content style={{ padding: '0 50px', height: '100%' }}>
                 <div className='site-layout-content'>
-                    <Outlet />
+                    {isAuthenticated && <Outlet />}
+                    {!isAuthenticated && <Result
+                        status="403"
+                        title="403"
+                        subTitle="Sorry, you are not authorized to access this page."
+                        extra={<Button type="primary" onClick={() => navigate('/')}>Back Home</Button>}
+                    />}
                 </div>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>Trading Bot</Footer>
+            <Footer style={{ textAlign: 'center', position: 'absolute', bottom: '0', width: '100vw', height: '20' }}>Trading Bot</Footer>
         </Layout>
     );
 };

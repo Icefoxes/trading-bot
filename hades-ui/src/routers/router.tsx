@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { MarketContainer, AuthContainer } from '../features';
+import { MarketContainer } from '../features';
 import { BasicLayout } from './layout';
 
 const router = createBrowserRouter([
@@ -9,11 +9,8 @@ const router = createBrowserRouter([
         children: [
             {
                 path: '/klines/:interval',
-                element: <MarketContainer />
-            },
-            {
-                path: '/auth',
-                element: <AuthContainer />
+                element: <MarketContainer />,
+                index: true
             },
         ]
     },

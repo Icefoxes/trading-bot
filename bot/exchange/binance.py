@@ -160,6 +160,7 @@ class BinanceUMSubscriber(Subscriber):
             self.last_tick = msg_stamp
         elif 'ORDER_TRADE_UPDATE' == event:
             record = data.get('o', {})
+            logging.info(record)
             order = Order(
                 orderId=record.get('i'),
                 # MARKET
