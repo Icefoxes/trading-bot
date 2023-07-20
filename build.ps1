@@ -9,7 +9,7 @@ if (Test-Path $envFile) {
   Remove-Item $envFile
 }
 
-$env:HOST='http://localhost:80/api/v1'
+$env:HOST='http://localhost:8000/api/v1'
 
 Set-Location hades-ui
 

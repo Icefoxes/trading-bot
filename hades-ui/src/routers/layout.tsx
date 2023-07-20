@@ -28,7 +28,7 @@ export const BasicLayout: React.FC = () => {
                             label: <Link to='/klines/15m'>15m</Link>
                         }
                     ]} />
-                <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel&key=2" />
+                <Avatar src='https://xsgames.co/randomusers/avatar.php?g=pixel&key=2' />
             </Header>
             <Content style={{ padding: '0 50px' }}>
                 <div className='site-layout-content'>

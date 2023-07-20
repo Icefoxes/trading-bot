@@ -27,7 +27,7 @@ class Messager:
             response = self.session.post(self.url, json=data)
             return 'errmsg' in response.json() and response.json()['errmsg'] == 'ok'
         else:
-            logging.info('message = {text} not sent')
+            logging.info(f'message = {text} not sent')
 
     def notify_with_interval(self, text, minute: int = 5) -> bool:
         now = datetime.utcnow()

@@ -106,8 +106,8 @@ class BinanceUMExchangeClient(Exchange):
 class BinanceUMSubscriber(Subscriber):
     def __init__(self, strategy: Strategy) -> None:
         self.strategy = strategy
-        self.strategy.on_init_exchange(BinanceUMExchangeClient(TradeBotConf.load()))
         conf = TradeBotConf.load()
+        self.strategy.on_init_exchange(BinanceUMExchangeClient(conf))
         self.conf = {
             'key': conf.binance['apiKey'],
             'secret': conf.binance['secretKey']
