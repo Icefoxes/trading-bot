@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from os import path
+import os
 
 class TradeBotConf:
     def __init__(self, conf: ConfigParser) -> None:
@@ -22,5 +23,6 @@ class TradeBotConf:
     @staticmethod
     def load():
         parser = ConfigParser()
-        parser.read(path.join(path.dirname(path.dirname(__file__)), 'app.conf'), encoding='UTF-8')
+        ROOT_DIR = os.path.abspath(os.curdir)
+        parser.read(path.join(ROOT_DIR, 'app.conf'), encoding='UTF-8')
         return TradeBotConf(parser)
