@@ -10,8 +10,8 @@ binance/okx based, currently it can only support real time Tick/Bar/Order/Positi
 ```shell
 python -m venv runtime
 runtime\Scripts\activate
-pip install -r requirement.txt
-# if requirement.txt not work
+pip install -r requirements.txt
+# if requirements.txt not work
 pip3 install python-okx pandas websockets requests binance-futures-connector schedule "uvicorn[standard]" fastapi
 ```
 
