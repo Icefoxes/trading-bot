@@ -4,7 +4,7 @@ import { LoginOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 
-const { Header, Content, Footer, } = Layout;
+const { Header, Content, } = Layout;
 
 export const BasicLayout: React.FC = () => {
     const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
@@ -50,7 +50,7 @@ export const BasicLayout: React.FC = () => {
                     />}
                 </div>
             </Content>
-            <Footer style={{ textAlign: 'center', position: 'absolute', bottom: '0', width: '100vw', height: '20' }}>Trading Bot</Footer>
+
         </Layout>
     );
 };
