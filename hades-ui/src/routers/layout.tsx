@@ -1,5 +1,5 @@
 import React from 'react';
-import { Avatar, Button, Layout, Menu, Tooltip, Result, Spin } from 'antd';
+import { Avatar, Button, Layout, Menu, Tooltip, Result, Spin, Row, Col } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 import { Outlet, Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
@@ -28,11 +28,11 @@ export const BasicLayout: React.FC = () => {
                             label: <Link to='/market' >Market</Link>
                         }
                     ]} />
-                {isAuthenticated && <div className='hades-header-name'>
-                    <Tooltip title='logout'><LoginOutlined style={{ color: 'white' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} /></Tooltip>
-                    <span className='hades-header-name-text'>{user?.name}</span>
-                    <Avatar src={user?.picture} />
-                </div>}
+                {isAuthenticated && <Row justify="center" align='middle' className='hades-header-name'>
+                    <Col span={4}><Tooltip title='logout'><LoginOutlined style={{ color: 'white' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} /></Tooltip></Col>
+                    <Col span={8}><span className='hades-header-name-text'>{user?.name}</span></Col>
+                    <Col span={8}><Avatar src={user?.picture} /></Col>
+                </Row>}
 
             </Header>
             <Content style={{ width: '100vw' }}>
