@@ -33,7 +33,7 @@ class TradeBotConf:
                 self.binance               = {}
                 self.binance['apiKey']     = conf['binance']['apiKey']
                 self.binance['secretKey']  = conf['binance']['secretKey']
-            if conf.add_section('notification'):
+            if conf.has_section('notification'):
                 self.token                 = conf['notification']['token']
                 self.prefix                = conf['notification']['prefix']
                 self.period                = conf['notification']['period']
