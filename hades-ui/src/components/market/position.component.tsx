@@ -24,6 +24,7 @@ export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) 
         {
             headerName: 'Entry Price',
             field: 'price',
+            valueFormatter: params => params.data?.price?.toFixed(3) || ''
         },
         {
             headerName: 'Unrealized Profit',
