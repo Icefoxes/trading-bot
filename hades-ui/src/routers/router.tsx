@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
 import { MarketContainer } from '../features';
 import { BasicLayout } from './layout';
 
@@ -7,8 +7,9 @@ const router = createBrowserRouter([
         path: '/',
         element: <BasicLayout />,
         children: [
+            { index: true, element: <Navigate to="/market" replace /> },
             {
-                path: '/klines/:interval',
+                path: 'market',
                 element: <MarketContainer />,
                 index: true
             },

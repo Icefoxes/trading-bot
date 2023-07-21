@@ -1,43 +1,42 @@
 import { FC } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
 import { Position } from '../../models';
-import { Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-
 
 export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) => {
-    const columns: ColumnsType<Position> = [
+    const columns: ColDef<Position>[] = [
         {
-            title: 'Symbol',
-            dataIndex: 'symbol',
-            key: 'symbol',
+            headerName: 'Symbol',
+            field: 'symbol',
+
         },
         {
-            title: 'Side',
-            dataIndex: 'side',
-            key: 'side',
+            headerName: 'Side',
+            field: 'side',
+
         },
         {
-            title: 'Size',
-            dataIndex: 'quantity',
-            key: 'quantity',
+            headerName: 'Size',
+            field: 'quantity',
+
         },
         {
-            title: 'Unrealized Profit',
-            dataIndex: 'unrealized_profit',
-            key: 'unrealized_profit',
+            headerName: 'Unrealized Profit',
+            field: 'unrealized_profit',
+
         },
 
         {
-            title: 'Unrealized Profit Ratio',
-            dataIndex: 'unrealized_profit_ratio',
-            key: 'unrealized_profit_ratio',
+            headerName: 'Unrealized Profit Ratio',
+            field: 'unrealized_profit_ratio',
+
         },
         {
-            title: 'Mode',
-            dataIndex: 'mode',
-            key: 'mode',
+            headerName: 'Mode',
+            field: 'mode',
+
         }
     ];
 
-    return <Table dataSource={positions} columns={columns} />;
+    return <AgGridReact className="ag-theme-alpine" rowData={positions} columnDefs={columns} />;
 }

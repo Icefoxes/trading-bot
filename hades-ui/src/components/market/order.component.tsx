@@ -1,43 +1,43 @@
 import { FC } from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
 import { Order } from '../../models';
-import { Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+
 
 
 export const OrderComponent: FC<{ orders: Order[] }> = ({ orders }) => {
-    const columns: ColumnsType<Order> = [
+    const columns: ColDef<Order>[] = [
         {
-            title: 'Symbol',
-            dataIndex: 'symbol',
-            key: 'symbol',
-        },
-        {
-            title: 'Side',
-            dataIndex: 'side',
-            key: 'side',
-        },
-        {
-            title: 'Size',
-            dataIndex: 'quantity',
-            key: 'quantity',
-        },
-        {
-            title: 'Entry Price',
-            dataIndex: 'price',
-            key: 'price',
-        },
+            headerName: 'Symbol',
+            field: 'symbol',
 
-        {
-            title: 'Order Id',
-            dataIndex: 'orderId',
-            key: 'orderId',
         },
         {
-            title: 'Order Type',
-            dataIndex: 'orderType',
-            key: 'orderType',
+            headerName: 'Side',
+            field: 'side',
+
+        },
+        {
+            headerName: 'Size',
+            field: 'quantity',
+
+        },
+        {
+            headerName: 'Entry Price',
+            field: 'price',
+
+        },
+        {
+            headerName: 'Order Id',
+            field: 'orderId',
+
+        },
+        {
+            headerName: 'Order Type',
+            field: 'orderType',
+
         }
     ];
 
-    return <Table dataSource={orders} columns={columns} />;
+    return <AgGridReact className="ag-theme-alpine" rowData={orders} columnDefs={columns} />;
 }

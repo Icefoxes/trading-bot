@@ -6,9 +6,10 @@ import { PositionComponent } from './position.component';
 import { BalanceComponent } from './balance.component';
 import { Order, Position, Balance } from '../../models';
 
+import './account.component.scss'
 
 export const AccountComponent: FC<{ orders: Order[], positions: Position[], balances: Balance[] }> = ({ orders, positions, balances }) => {
-    return <Tabs items={[
+    return <Tabs className='account-tabs' items={[
         {
             key: '1',
             label: `Positions`,

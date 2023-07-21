@@ -1,9 +1,10 @@
 import { useRef, useEffect, FC } from 'react';
 import { Chart, init, dispose } from 'klinecharts';
-import { Kline } from '../../models';
+import { Radio } from 'antd';
 import moment from 'moment';
 
-export const KLineComponent: FC<{ bars: Kline[] }> = ({ bars }) => {
+import { Kline } from '../../models';
+export const KLineComponent: FC<{ bars: Kline[], onIntervalChanged: (interval: string) => void }> = ({ bars, onIntervalChanged }) => {
     useEffect(() => {
         if (bars.length > 0) {
             document.title = `${bars[bars.length - 1]?.close}`;
@@ -30,6 +31,13 @@ export const KLineComponent: FC<{ bars: Kline[] }> = ({ bars }) => {
         }
     }, [bars]);
     const chart = useRef<Chart | null>(null);
-    return <div id='hades-klines-chart' style={{ width: '90vw', height: '70vh', display: 'flex', justifyContent: 'center', alignContent: 'center' }} />
-    
+    return <>
+        <div id='hades-klines-chart' style={{ width: '90vw', height: '70vh', display: 'flex', justifyContent: 'center', alignContent: 'center' }} />
+        <Radio.Group onChange={e => onIntervalChanged(e.target.value)} defaultValue="a">
+            <Radio.Button value="1m">1M</Radio.Button>
+            <Radio.Button value="5m">5M</Radio.Button>
+            <Radio.Button value="15m">15M</Radio.Button>
+        </Radio.Group>
+    </>
+
 }

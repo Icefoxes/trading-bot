@@ -1,52 +1,48 @@
 import React from 'react';
-import { Avatar, Button, Layout, Menu, Tooltip, Result } from 'antd';
-import { LoginOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Avatar, Button, Layout, Menu, Tooltip, Result, Spin } from 'antd';
+import { LoginOutlined } from '@ant-design/icons';
+import { Outlet, Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
+import './layout.scss';
+import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
+import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 
 const { Header, Content, } = Layout;
 
 export const BasicLayout: React.FC = () => {
-    const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
-    const navigate = useNavigate();
+    const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0();
+    if (isLoading) {
+        return <div className='auth-loading-container'><Spin size="large" /></div>
+    }
     return (
-        <Layout className='layout'>
+        <Layout className='hades-layout'>
             <Header style={{ display: 'flex', alignItems: 'center', width: '100vw' }}>
-                <div className='demo-logo' />
+                <div className='logo' />
                 <Menu
                     theme='dark'
                     mode='horizontal'
-                    style={{ 'width': '100vw' }}
-                    defaultSelectedKeys={['1']}
+                    className='layout-header-menus'
                     items={[
                         {
                             key: '1',
-                            label: <Link to='/klines/1m' >1m</Link>
-                        },
-                        {
-                            key: '2',
-                            label: <Link to='/klines/5m'>5m</Link>
-                        },
-                        {
-                            key: '3',
-                            label: <Link to='/klines/15m'>15m</Link>
+                            label: <Link to='/market' >Market</Link>
                         }
                     ]} />
-                {isAuthenticated && <>
-                    <Tooltip title='logout'><Button type="primary" onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} icon={<LoginOutlined />} /></Tooltip>
+                {isAuthenticated && <div className='hades-header-name'>
+                    <Tooltip title='logout'><LoginOutlined style={{ color: 'white' }} onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })} /></Tooltip>
+                    <span className='hades-header-name-text'>{user?.name}</span>
                     <Avatar src={user?.picture} />
-                </>}
-                {!isAuthenticated && <Tooltip title='login'><Button type="primary" onClick={() => loginWithRedirect()} icon={<LogoutOutlined />} /></Tooltip>}
+                </div>}
 
             </Header>
-            <Content style={{ padding: '0 50px', height: '100%' }}>
+            <Content style={{ width: '100vw' }}>
                 <div className='site-layout-content'>
                     {isAuthenticated && <Outlet />}
                     {!isAuthenticated && <Result
                         status="403"
                         title="403"
                         subTitle="Sorry, you are not authorized to access this page."
-                        extra={<Button type="primary" onClick={() => navigate('/')}>Back Home</Button>}
+                        extra={<Button type="primary" onClick={() => loginWithRedirect()}>Login</Button>}
                     />}
                 </div>
             </Content>

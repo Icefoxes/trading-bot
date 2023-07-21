@@ -1,0 +1,39 @@
+.auth-loading-container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hades-layout {
+    height: 100%;
+    .logo {
+        background-image: url("./../../asset/logo.png");
+        height: 50px;
+        width: 50px;
+        background-repeat: no-repeat;
+    }
+    .layout-header-menus {
+        width: 80vw;
+    }
+
+    .hades-header-name {
+        width: 10vw;
+        display: flex;
+        align-content: center;
+        align-items: center;
+        justify-content: space-around;
+        .hades-header-name-text {
+            color: white;
+        }
+    }
+   
+    .site-layout-content {
+        height: 100%;
+        flex-direction: column;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

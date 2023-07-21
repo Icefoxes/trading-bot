@@ -1,22 +1,20 @@
 import { FC } from 'react';
-import { Balance } from '../../models';
-import { Table } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import { AgGridReact } from 'ag-grid-react';
+import { ColDef } from 'ag-grid-community';
 
+import { Balance } from '../../models';
 
 export const BalanceComponent: FC<{ balances: Balance[] }> = ({ balances }) => {
-    const columns: ColumnsType<Balance> = [
+    const columns: ColDef<Balance>[] = [
         {
-            title: 'Asset',
-            dataIndex: 'asset',
-            key: 'asset',
+            headerName: 'Asset',
+            field: 'asset',
         },
         {
-            title: 'Available Balance',
-            dataIndex: 'availableBalance',
-            key: 'availableBalance',
+            headerName: 'Available Balance',
+            field: 'availableBalance',
         },
     ];
 
-    return <Table dataSource={balances} columns={columns} />;
+    return <AgGridReact className="ag-theme-alpine" rowData={balances} columnDefs={columns} />;
 }
