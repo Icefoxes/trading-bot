@@ -1,11 +1,9 @@
 from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from binance.um_futures import UMFutures
-import schedule
 
 import asyncio
 from datetime import datetime
 from typing import List
-import time
 import logging
 
 from bot import TradeBotConf, Strategy, Subscriber, Exchange,  Order, Position, Balance, Tick, Bar, Trade
@@ -105,7 +103,7 @@ class BinanceUMExchangeClient(Exchange):
 
                             
     def get_trades(self, symbol: str) -> List[Trade]:
-        trades = []
+        trades: List[Trade] = []
         cache = {}
         for record in self.client.get_account_trades(symbol=symbol):
             if record['commissionAsset'] == 'USDT':

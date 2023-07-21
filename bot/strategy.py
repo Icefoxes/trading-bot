@@ -3,7 +3,7 @@ from typing import List
 from enum import Enum
 import logging
 
-from bot import Balance, Tick, Bar, Order, Position
+from bot import Balance, Tick, Bar, Order, Position, Trade
 
 class ExchangeEnum(Enum):
     OKX = 1
@@ -36,6 +36,8 @@ class Exchange:
     def get_candlesticks(self, symbol: str, bar: str = '1m', limit: int = 100) -> List[Bar]:
         pass
 
+    def get_trades(self, symbol: str) -> List[Trade]:
+        pass
 
 class Subscriber:
     def run(self) -> asyncio.Task:
