@@ -1,7 +1,7 @@
 export interface Trade {
     symbol: string;
-    id: string;
-    orderId: string;
+    id: number;
+    orderId: number;
     side: string;
     price: number;
     quantity: number;
@@ -11,6 +11,6 @@ export interface Trade {
     commission: number;
     commissionToUSDT: number;
     commissionAsset: string;
-    timestamp: Date;
+    timestamp: string;
     maker: boolean;
 }

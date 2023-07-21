@@ -1,1 +1,1 @@
-export * from './commission.component';
+export * from './trade.component';

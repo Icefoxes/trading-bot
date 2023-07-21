@@ -1,0 +1,11 @@
+.card-container {
+    display: flex;
+    justify-content: space-around;
+    width: 40vw;
+    margin: 1em 0;
+    .ant-card-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
