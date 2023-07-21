@@ -1,11 +1,10 @@
-import { FC, useEffect, useRef } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { AgGridReact } from 'ag-grid-react';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridApi } from 'ag-grid-community';
 import { Position } from '../../models';
 import './account.component.scss'
 
 export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) => {
-    const gridRef = useRef<AgGridReact | null>(null);
     const columns: ColDef<Position>[] = [
         {
             headerName: 'Symbol',
@@ -39,10 +38,16 @@ export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) 
 
         }
     ];
+    const [gridApi, setGridApi] = useState<GridApi<Position> | null>(null);
     useEffect(() => {
-        gridRef?.current?.api.sizeColumnsToFit();
-    }, [])
+        gridApi?.sizeColumnsToFit({
+            defaultMinWidth: 50,
+            columnLimits: [{ key: 'asset', minWidth: 100 }],
+        });
+    }, [gridApi])
     return <div className='table-container'>
-        <AgGridReact ref={gridRef} className="ag-theme-alpine" rowData={positions} columnDefs={columns} />
+        <AgGridReact className="ag-theme-alpine" rowData={positions} columnDefs={columns} onGridReady={(e) => {
+            setGridApi(e.api);
+        }} />
     </div>;
 }
