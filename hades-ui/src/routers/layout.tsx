@@ -16,7 +16,7 @@ export const BasicLayout: React.FC = () => {
     }
     return (
         <Layout className='hades-layout'>
-            <Header style={{ display: 'flex', alignItems: 'center', width: '100vw' }}>
+            <Header style={{ display: 'flex', alignItems: 'center', width: '100%', padding: 0 }}>
                 <div className='logo' />
                 <Menu
                     theme='dark'
@@ -26,6 +26,10 @@ export const BasicLayout: React.FC = () => {
                         {
                             key: '1',
                             label: <Link to='/market' >Market</Link>
+                        },
+                        {
+                            key: '2',
+                            label: <Link to='/commission' >Commission</Link>
                         }
                     ]} />
                 {isAuthenticated && <Row justify="center" align='middle' className='hades-header-name'>
@@ -35,7 +39,7 @@ export const BasicLayout: React.FC = () => {
                 </Row>}
 
             </Header>
-            <Content style={{ width: '100vw' }}>
+            <Content style={{ width: '100%' }}>
                 <div className='site-layout-content'>
                     {isAuthenticated && <Outlet />}
                     {!isAuthenticated && <Result

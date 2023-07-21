@@ -1,14 +1,12 @@
 from binance.websocket.um_futures.websocket_client import UMFuturesWebsocketClient
 from binance.um_futures import UMFutures
-import schedule
 
 import asyncio
 from datetime import datetime
 from typing import List
-import time
 import logging
 
-from bot import TradeBotConf, Strategy, Subscriber, Exchange,  Order, Position, Balance, Tick, Bar
+from bot import TradeBotConf, Strategy, Subscriber, Exchange,  Order, Position, Balance, Tick, Bar, Trade
 
 class BinanceUMExchangeClient(Exchange):
     def __init__(self,  conf: TradeBotConf) -> None:
@@ -70,6 +68,7 @@ class BinanceUMExchangeClient(Exchange):
                 timestamp=datetime.fromtimestamp(record['updateTime'] / 1000)
             ))
         return orders
+    
     def place_sell_order(self, symbol: str, size: float, price: float):
         params = {
             'symbol': symbol,
@@ -101,7 +100,38 @@ class BinanceUMExchangeClient(Exchange):
                 vol=float(_vol)
             ))
         return bars
-       
+
+                            
+    def get_trades(self, symbol: str) -> List[Trade]:
+        trades: List[Trade] = []
+        cache = {}
+        for record in self.client.get_account_trades(symbol=symbol):
+            if record['commissionAsset'] == 'USDT':
+                priceToUSDT = 1
+            else:
+                if record['commissionAsset'] not in cache:
+                    priceToUSDT = float(self.client.mark_price(symbol=f"{record['commissionAsset']}USDT")['markPrice'])
+                    cache[record['commissionAsset']] = priceToUSDT
+                else:
+                    priceToUSDT = cache[record['commissionAsset']]
+                
+            trades.append(Trade(
+                 id=record['id'],
+                 orderId=record['orderId'],
+                 symbol=record['symbol'],
+                 side=record['side'],
+                 price=float(record['price']),
+                 quantity=float(record['qty']),
+                 realizedPnl=float(record['realizedPnl']),
+                 marginAsset=record['marginAsset'],
+                 quoteQty=float(record['quoteQty']),
+                 commissionToUSDT=priceToUSDT * float(record['commission']),
+                 commission=float(record['commission']),
+                 commissionAsset=record['commissionAsset'],
+                 timestamp=datetime.fromtimestamp(record['time'] / 1000),
+                 maker=bool(record['maker'])
+            ))
+        return trades
 
 class BinanceUMSubscriber(Subscriber):
     def __init__(self, strategy: Strategy) -> None:

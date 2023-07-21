@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
-import { MarketContainer } from '../features';
+import { MarketContainer, CommissionContainer } from '../features';
 import { BasicLayout } from './layout';
 
 const router = createBrowserRouter([
@@ -9,9 +9,13 @@ const router = createBrowserRouter([
         children: [
             { index: true, element: <Navigate to="/market" replace /> },
             {
-                path: 'market',
+                path: '/market',
                 element: <MarketContainer />,
                 index: true
+            },
+            {
+                path: 'commission',
+                element: <CommissionContainer />,
             },
         ]
     },

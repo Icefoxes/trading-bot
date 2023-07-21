@@ -31,3 +31,13 @@ def test_klind():
 
     response = exchange.get_candlesticks(symbol='BTCUSDT', bar='1m')
     assert len(response) == 100
+
+def test_trades():
+    conf = TradeBotConf.load()
+    exchange = BinanceUMExchangeClient(conf)
+    with open(path.join(path.dirname(__file__), 'trade.json'),  'r') as f:
+        exchange.client.get_account_trades = MagicMock(return_value=json.loads(f.read()))
+    with open(path.join(path.dirname(__file__), 'mark_price.json'),  'r') as f:
+        exchange.client.mark_price = MagicMock(return_value=json.loads(f.read()))
+    response = exchange.get_trades(symbol='BTCUSDT')
+    assert len(response) == 2

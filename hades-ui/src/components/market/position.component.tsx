@@ -44,8 +44,7 @@ export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) 
     const [gridApi, setGridApi] = useState<GridApi<Position> | null>(null);
     useEffect(() => {
         gridApi?.sizeColumnsToFit({
-            defaultMinWidth: 50,
-            columnLimits: [{ key: 'asset', minWidth: 100 }],
+            defaultMinWidth: 20,
         });
     }, [gridApi])
     return <div className='table-container'>
