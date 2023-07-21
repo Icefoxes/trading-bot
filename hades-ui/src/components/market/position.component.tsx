@@ -22,11 +22,14 @@ export const PositionComponent: FC<{ positions: Position[] }> = ({ positions }) 
 
         },
         {
+            headerName: 'Entry Price',
+            field: 'price',
+        },
+        {
             headerName: 'Unrealized Profit',
             field: 'unrealized_profit',
 
         },
-
         {
             headerName: 'Unrealized Profit Ratio',
             field: 'unrealized_profit_ratio',

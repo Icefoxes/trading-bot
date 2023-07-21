@@ -8,6 +8,11 @@ import './account.component.scss'
 export const OrderComponent: FC<{ orders: Order[] }> = ({ orders }) => {
     const columns: ColDef<Order>[] = [
         {
+            headerName: 'Order Id',
+            field: 'orderId',
+
+        },
+        {
             headerName: 'Symbol',
             field: 'symbol',
 
@@ -23,19 +28,13 @@ export const OrderComponent: FC<{ orders: Order[] }> = ({ orders }) => {
 
         },
         {
-            headerName: 'Entry Price',
+            headerName: 'Price',
             field: 'price',
 
-        },
-        {
-            headerName: 'Order Id',
-            field: 'orderId',
-
-        },
+        },   
         {
             headerName: 'Order Type',
             field: 'orderType',
-
         }
     ];
     const [gridApi, setGridApi] = useState<GridApi<Order> | null>(null);
