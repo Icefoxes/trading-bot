@@ -13,3 +13,18 @@ Position = namedtuple('Position', ['symbol', 'instrumentType',
                                    'unrealized_profit_ratio', 'mode', 'price', 'timestamp'])
 
 Balance = namedtuple('Balance',['asset', 'availableBalance'])
+
+Trade = namedtuple('Trade', ['symbol', 
+                             'id', 
+                             'orderId', 
+                             'side', 
+                             'price', 
+                             'quantity',
+                             'realizedPnl',
+                             'marginAsset', 
+                             'quoteQty', 
+                             'commission', 
+                             'commissionToUSDT', 
+                             'commissionAsset', 
+                             'timestamp',
+                             'maker'])

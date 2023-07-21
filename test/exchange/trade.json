@@ -1,0 +1,36 @@
+[
+    {
+        "symbol": "BTCUSDT",
+        "id": 3946599480,
+        "orderId": 172149871972,
+        "side": "BUY",
+        "price": "29862",
+        "qty": "0.033",
+        "realizedPnl": "0",
+        "marginAsset": "USDT",
+        "quoteQty": "985.44600",
+        "commission": "0.19708920",
+        "commissionAsset": "USDT",
+        "time": 1689618816931,
+        "positionSide": "LONG",
+        "maker": true,
+        "buyer": true
+    },
+    {
+        "symbol": "BTCUSDT",
+        "id": 3948057474,
+        "orderId": 172352557897,
+        "side": "BUY",
+        "price": "29950",
+        "qty": "0.142",
+        "realizedPnl": "0",
+        "marginAsset": "USDT",
+        "quoteQty": "4252.90000",
+        "commission": "0.85058000",
+        "commissionAsset": "USDT",
+        "time": 1689662330751,
+        "positionSide": "LONG",
+        "maker": true,
+        "buyer": true
+    }
+]

@@ -1,12 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { marketApi } from '../services';
+import { ServiceReducers, ServiceMiddlewares } from '../services';
 
 export const store = configureStore({
   reducer: {
-    [marketApi.reducerPath]: marketApi.reducer,
+    ...ServiceReducers
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(marketApi.middleware),
+    getDefaultMiddleware().concat([...ServiceMiddlewares]),
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
