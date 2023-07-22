@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar, Button, Layout, Menu, Tooltip, Result, Spin, Row, Col } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
-import { Outlet, Link } from 'react-router-dom';
+import { Outlet, Link, useLocation } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import './layout.scss';
 import 'ag-grid-community/styles/ag-grid.css'; // Core grid CSS, always needed
@@ -10,6 +10,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css'; // Optional theme CSS
 const { Header, Content, } = Layout;
 
 export const BasicLayout: React.FC = () => {
+    const location = useLocation();
     const { loginWithRedirect, logout, isAuthenticated, user, isLoading } = useAuth0();
     if (isLoading) {
         return <div className='auth-loading-container'><Spin size="large" /></div>
@@ -19,17 +20,22 @@ export const BasicLayout: React.FC = () => {
             <Header style={{ display: 'flex', alignItems: 'center', width: '100%', padding: 0 }}>
                 <div className='logo' />
                 <Menu
+                    defaultSelectedKeys={[location.pathname.replace('/', '')]}
                     theme='dark'
                     mode='horizontal'
                     className='layout-header-menus'
                     items={[
                         {
-                            key: '1',
+                            key: 'market',
                             label: <Link to='/market' >Market</Link>
                         },
                         {
-                            key: '2',
+                            key: 'commission',
                             label: <Link to='/commission' >Commission</Link>
+                        },
+                        {
+                            key: 'backtesting',
+                            label: <Link to='/backtesting' >Backtesting</Link>
                         }
                     ]} />
                 {isAuthenticated && <Row justify="center" align='middle' className='hades-header-name'>

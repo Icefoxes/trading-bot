@@ -38,6 +38,7 @@ export const TradeDetailComponent: FC<{ trades: Trade[] }> = ({ trades }) => {
         {
             headerName: 'Commission To USDT',
             field: 'commissionToUSDT',
+            valueFormatter: params => params.data?.commissionToUSDT?.toFixed(3) || ''
         },
         {
             headerName: 'Marker',
@@ -46,6 +47,7 @@ export const TradeDetailComponent: FC<{ trades: Trade[] }> = ({ trades }) => {
         {
             headerName: 'Realized PNL',
             field: 'realizedPnl',
+            valueFormatter: params => params.data?.realizedPnl?.toFixed(3) || ''
         },
         {
             headerName: 'Datetime',

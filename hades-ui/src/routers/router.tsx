@@ -1,5 +1,5 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
-import { MarketContainer, CommissionContainer } from '../features';
+import { MarketContainer, CommissionContainer, BacktestingContainer } from '../features';
 import { BasicLayout } from './layout';
 
 const router = createBrowserRouter([
@@ -17,6 +17,10 @@ const router = createBrowserRouter([
                 path: 'commission',
                 element: <CommissionContainer />,
             },
+            {
+                path: 'backtesting',
+                element: <BacktestingContainer />,
+            }
         ]
     },
 ]);

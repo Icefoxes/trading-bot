@@ -1,5 +1,5 @@
 export interface Order {
-    orderId: string;
+    orderId: number;
     orderType: string;
     symbol: string;
     instrumentType: string;
@@ -7,5 +7,5 @@ export interface Order {
     status: string;
     side: string;
     quantity: number;
-    timestamp: Date;
+    timestamp: string;
 }
