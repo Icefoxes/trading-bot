@@ -3,8 +3,14 @@ import { Chart, init, dispose } from 'klinecharts';
 import { Radio } from 'antd';
 import moment from 'moment';
 
-import { Kline } from '../../models';
-export const KLineComponent: FC<{ bars: Kline[], onIntervalChanged: (interval: string) => void }> = ({ bars, onIntervalChanged }) => {
+import { Kline, Order } from '../../models';
+
+
+export const KLineComponent: FC<{
+    bars: Kline[],
+    orders: Order[],
+    onIntervalChanged: (interval: string) => void
+}> = ({ bars, orders, onIntervalChanged }) => {
     useEffect(() => {
         if (bars.length > 0) {
             document.title = `${bars[bars.length - 1]?.close}`;
@@ -23,13 +29,27 @@ export const KLineComponent: FC<{ bars: Kline[], onIntervalChanged: (interval: s
         });
         if (data.length > 0) {
             chart.current = init('hades-klines-chart');
+            chart.current?.createIndicator('VOL');
+            orders.forEach(order => {
+                chart.current?.createOverlay({
+                    name: 'simpleAnnotation',
+                    extendData: order.side,
+                    points: [{ timestamp: moment(order.timestamp).unix() * 1000, value: order.price }]
+                });
+                chart.current?.createOverlay({
+                    name: 'simpleTag',
+                    extendData: order.side,
+                    points: [{ value: order.price  }]
+                })
+            })
+
             chart.current?.clearData()
             chart.current?.applyNewData(data)
         }
         return () => {
             dispose('hades-klines-chart')
         }
-    }, [bars]);
+    }, [bars, orders]);
     const chart = useRef<Chart | null>(null);
     return <>
         <div id='hades-klines-chart' style={{ width: '90vw', height: '70vh', display: 'flex', justifyContent: 'center', alignContent: 'center' }} />
