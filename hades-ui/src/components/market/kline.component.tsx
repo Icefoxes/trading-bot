@@ -33,7 +33,7 @@ export const KLineComponent: FC<{ bars: Kline[], onIntervalChanged: (interval: s
     const chart = useRef<Chart | null>(null);
     return <>
         <div id='hades-klines-chart' style={{ width: '90vw', height: '70vh', display: 'flex', justifyContent: 'center', alignContent: 'center' }} />
-        <Radio.Group onChange={e => onIntervalChanged(e.target.value)} defaultValue="a">
+        <Radio.Group onChange={e => onIntervalChanged(e.target.value)} defaultValue="1m">
             <Radio.Button value="1m">1M</Radio.Button>
             <Radio.Button value="5m">5M</Radio.Button>
             <Radio.Button value="15m">15M</Radio.Button>
