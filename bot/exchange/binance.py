@@ -20,7 +20,7 @@ class BinanceUMExchangeClient(Exchange):
     def get_positions(self) -> List[Position]:
         response: List[Position] = []
         for pos in self.client.account()['positions']:
-            if float(pos['positionAmt']) > 0:
+            if float(pos['positionAmt']) != 0:
                 response.append(Position(
                     symbol=pos['symbol'],
                     instrumentType='SWAP',
@@ -220,7 +220,7 @@ class BinanceUMSubscriber(Subscriber):
             # handle positions
             positions: List[Position] = []
             for _position in record.get('P'):
-                if float(_position['iw']) > 0:
+                if float(_position['iw']) != 0:
                     positions.append(Position(
                         symbol=_position.get('s'),
                         instrumentType='SWAP',

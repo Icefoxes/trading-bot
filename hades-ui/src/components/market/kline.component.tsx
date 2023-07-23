@@ -3,14 +3,15 @@ import { Chart, init, dispose } from 'klinecharts';
 import { Radio } from 'antd';
 import moment from 'moment';
 
-import { Kline, Order } from '../../models';
+import { Kline, Order, Position } from '../../models';
 
 
 export const KLineComponent: FC<{
     bars: Kline[],
     orders: Order[],
+    positions: Position[],
     onIntervalChanged: (interval: string) => void
-}> = ({ bars, orders, onIntervalChanged }) => {
+}> = ({ bars, orders, positions, onIntervalChanged }) => {
     useEffect(() => {
         if (bars.length > 0) {
             document.title = `${bars[bars.length - 1]?.close}`;
@@ -39,7 +40,14 @@ export const KLineComponent: FC<{
                 chart.current?.createOverlay({
                     name: 'simpleTag',
                     extendData: order.side,
-                    points: [{ value: order.price  }]
+                    points: [{ value: order.price }]
+                })
+            })
+            positions.forEach(pos => {
+                chart.current?.createOverlay({
+                    name: 'simpleTag',
+                    extendData: `${pos.unrealized_profit}`,
+                    points: [{ value: pos.price }]
                 })
             })
 
@@ -49,7 +57,7 @@ export const KLineComponent: FC<{
         return () => {
             dispose('hades-klines-chart')
         }
-    }, [bars, orders]);
+    }, [bars, orders, positions]);
     const chart = useRef<Chart | null>(null);
     return <>
         <div id='hades-klines-chart' style={{ width: '90vw', height: '70vh', display: 'flex', justifyContent: 'center', alignContent: 'center' }} />
