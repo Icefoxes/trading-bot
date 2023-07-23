@@ -9,7 +9,10 @@ export const MarketContainer: FC<{}> = () => {
     const { data: positions } = useGetPositionsQuery({});
     const { data: balances } = useGetBalancesQuery({});
     return <>
-        <KLineComponent bars={data || []} orders={orders || []} onIntervalChanged={setInterval} />
+        <KLineComponent bars={data || []}
+            orders={orders || []}
+            positions={positions || []}
+            onIntervalChanged={setInterval} />
         <AccountComponent orders={orders || []} positions={positions || []} balances={balances || []} />
     </>
 }
